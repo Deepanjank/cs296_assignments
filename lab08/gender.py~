@@ -1,0 +1,105 @@
+import sys
+
+def checkupper(a):
+        ans = True
+        for i in a:
+                ans = ans and (ord(i) < 97 or ord(i) > 122)
+        return ans
+
+def checkname(a):
+        ans = True
+        for i in a :
+                ans = ans and not( i in [':', ';', '-', '_', '.', '!', '?', '(', ')', ',', '#' ])
+        return ans
+
+f=open('OnlyGodForgives')
+lines=f.readlines()
+
+for i in range(len(lines)):
+        lines[i] = lines[i].strip()
+words = []
+words.extend(lines)
+for i in range(len(lines)):
+        words[i] = lines[i].split()
+
+chars = []
+
+for i in range(len(words)):
+        if len(words[i]) < 5:
+                all_upper = True
+                if lines[i].isupper() and checkname(lines[i]) and not(lines[i] in chars) :
+                        chars.append(lines[i])
+
+
+#purifying
+chars_l = []
+for i in chars:
+        chars_l.append(i.lower())
+words_l = []
+for i in words:
+        temp = []
+        for j in i:
+                temp.append(j.lower())
+        words_l.append(temp)
+
+
+gender=['u']*len(chars_l)
+
+#finding Dr. Mr. Mrs.
+
+tags=['dr.', 'mr.', 'mrs.', 'ms.','miss']
+
+for i in words_l:
+        for  j in range(len(i)):
+                if i[j] in tags and j != len(i)-1:
+                        occurs = False
+                        for k in chars_l:
+                                if i[j+1] in k:
+                                        occurs = True
+                                        break
+                                if not(occurs) and checkname(i[j+1]):
+                                        chars_l.append(i[j+1])
+                                if(tag=='mr.'):
+                                        gender.append('m')
+                                elif(tag=='mrs.' or tag=='ms.' or tag=='miss'):
+                                        gender.append('f')
+#counting
+count = {}
+for i in chars_l:
+        count[i] = 0
+
+for i in lines:
+        for j in chars_l:
+                if j in i.lower():
+                        count[j]= count[j] + 1
+title = 'Despicable me 2'
+
+for i in chars_l:
+        if count[i] < 5 or i == title.lower() or i == 'the end':
+                count.pop(i)
+
+print(count)
+key_words_m=['he','his','boy','guy','man']
+key_words_f=['she','her','girl','woman']
+keym=0
+keyf=0
+key=[0,0,0,0,0,0,0,0,0] #he,she,his,her,boy,guy,man,girl,woman
+for i in range(len(chars_l)):
+	if gender[i]=='u':
+		for j in range(len(words_l)):
+			if char[i] in words_l[j]:
+				for x in words_l[j]+words_l[j+1]+words_l[j+2]:
+					if x in key_words_m:
+						keym=keym+1;
+					elif x in key_words_f:
+						keyf=keyf+1;
+			if (keyf>keym-2):
+				gender[i]='f'
+			elif keym >keyf-2:
+				gender[i]='m'	
+			else :
+				gender[i]='u'
+for i in range (len(chars_l)):
+	print(chars_l[i]+" , "+gender[i])
+				
+		
